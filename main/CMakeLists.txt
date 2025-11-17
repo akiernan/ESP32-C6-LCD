@@ -17,4 +17,11 @@ idf_component_register(
                               "./RGB" 
                               "./Wireless"
                               "."
+
+			 PRIV_REQUIRES
+			      "bt"
+			      "esp_lcd"
+			      "fatfs"
+			      "nvs_flash"
+			      "spi_flash"
                        )
