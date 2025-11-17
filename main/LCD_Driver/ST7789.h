@@ -13,7 +13,6 @@
 #include "lvgl.h"
 #include "driver/ledc.h"
 
-#include "Vernon_ST7789T.h"
 #include "LVGL_Driver.h"
 // LCD SPI GPIO
 // Using SPI2 

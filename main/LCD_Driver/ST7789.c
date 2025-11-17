@@ -33,17 +33,53 @@ void LCD_Init(void)
     // Attach the LCD to the SPI bus
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)LCD_HOST, &io_config, &io_handle));
 
-    esp_lcd_panel_dev_st7789t_config_t panel_config = {
+    esp_lcd_panel_dev_config_t panel_config = {
         .reset_gpio_num = EXAMPLE_PIN_NUM_LCD_RST,
         .rgb_endian = LCD_RGB_ENDIAN_BGR,
         .bits_per_pixel = 16,
     };
     ESP_LOGI(TAG_LCD, "Install ST7789T panel driver");
-    ESP_ERROR_CHECK(esp_lcd_new_panel_st7789t(io_handle, &panel_config, &panel_handle));
+    ESP_ERROR_CHECK(esp_lcd_new_panel_st7789(io_handle, &panel_config, &panel_handle));
 
 
     ESP_ERROR_CHECK(esp_lcd_panel_reset(panel_handle));
     ESP_ERROR_CHECK(esp_lcd_panel_init(panel_handle));
+
+    /* Memory Data Access Control, MX=MV=1, MY=ML=MH=0, RGB=0 */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0x36, (uint8_t []){0x00}, 1));                           // 0x36: 接口像素格式 X镜像，Y镜像
+    /* Interface Pixel Format, 16bits/pixel for RGB/MCU interface */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0x3A, (uint8_t []){0x55}, 1));                           // 0x3A: Porch 设置
+
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xB0, (uint8_t []){0x00, 0xE8}, 2));
+    /* Porch Setting */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xB2, (uint8_t []){0x0c, 0x0c, 0x00, 0x33, 0x33}, 5));
+    /* Gate Control, Vgh=13.65V, Vgl=-10.43V */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xB7, (uint8_t []){0x75}, 1));
+    /* VCOM Setting, VCOM=1.175V */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xBB, (uint8_t []){0x1A}, 1));
+    /* LCM Control, XOR: BGR, MX, MH */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xC0, (uint8_t []){0x80}, 1));
+    /* VDV and VRH Command Enable, enable=1 */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xC2, (uint8_t []){0x01, 0xff}, 2));
+    /* VRH Set, Vap=4.4+... */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xC3, (uint8_t []){0x13}, 1));
+    /* VDV Set, VDV=0 */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xC4, (uint8_t []){0x20}, 1));
+    /* Frame Rate Control, 60Hz, inversion=0 */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xC6, (uint8_t []){0x0F}, 1));
+    /* Power Control 1, AVDD=6.8V, AVCL=-4.8V, VDDS=2.3V */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xD0, (uint8_t []){0xA4, 0xA1}, 1));
+    /* Positive Voltage Gamma Control */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xE0, (uint8_t []){0xD0, 0x0D, 0x14, 0x0D, 0x0D, 0x09, 0x38, 0x44, 0x4E, 0x3A, 0x17, 0x18, 0x2F, 0x30}, 14));
+    /* Negative Voltage Gamma Control */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0xE1, (uint8_t []){0xD0, 0x09, 0x0F, 0x08, 0x07, 0x14, 0x37, 0x44, 0x4D, 0x38, 0x15, 0x16, 0x2C, 0x2E}, 14));
+    /* Sleep Out */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0x21, NULL, 0));
+    /* Display On */
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0x29, NULL, 0));
+
+    ESP_ERROR_CHECK(esp_lcd_panel_io_tx_param(io_handle, 0x2C, NULL, 0));
+
     ESP_ERROR_CHECK(esp_lcd_panel_mirror(panel_handle, true, false));
 
     // user can flush pre-defined pattern to the screen before we turn on the screen or backlight
