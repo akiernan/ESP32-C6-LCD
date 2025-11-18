@@ -18,6 +18,7 @@ idf_component_register(
 
 			 PRIV_REQUIRES
 			      "bt"
+			      "esp_driver_ledc"
 			      "esp_lcd"
 			      "fatfs"
 			      "nvs_flash"

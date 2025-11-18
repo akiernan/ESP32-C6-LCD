@@ -13,7 +13,7 @@ dependencies:
   idf:
     source:
       type: idf
-    version: 5.5.1
+    version: 6.0.0
   lvgl/lvgl:
     component_hash: 
       948bff879a345149b83065535bbc4a026ce9f47498a22881e432a264b9098015
@@ -26,6 +26,6 @@ direct_dependencies:
 - espressif/led_strip
 - idf
 - lvgl/lvgl
-manifest_hash: 9fe537c3fdf47db5c4d1c91adcfaa27b67b63c066363b598ca1a38c0e2005324
+manifest_hash: b784e808b68a47f2360ad32c1b0bd486e6fda7e02d159614d975ad0a043a3d84
 target: esp32c6
 version: 2.0.0
