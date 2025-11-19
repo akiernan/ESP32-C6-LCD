@@ -10,10 +10,10 @@
 
 #include "ST7789.h"
 
-#define PIN_NUM_MOSI    EXAMPLE_PIN_NUM_MOSI    
-#define PIN_NUM_MISO    5    
-#define PIN_NUM_SCLK    EXAMPLE_PIN_NUM_SCLK    
-#define PIN_NUM_CS      4            
+#define PIN_NUM_MOSI EXAMPLE_PIN_NUM_MOSI
+#define PIN_NUM_MISO 5
+#define PIN_NUM_SCLK EXAMPLE_PIN_NUM_SCLK
+#define PIN_NUM_CS 4
 
 esp_err_t SD_Card_CS_EN(void);
 esp_err_t SD_Card_CS_Dis(void);
