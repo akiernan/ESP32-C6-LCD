@@ -16,23 +16,21 @@ void Wireless_Init(void)
     }
     ESP_ERROR_CHECK( ret );
     // WiFi
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
         WIFI_Init, 
         "WIFI task",
         8192, 
         NULL, 
         1, 
-        NULL, 
-        0);
+        NULL);
     // BLE
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
         BLE_Init, 
         "BLE task",
         4096, 
         NULL, 
         2, 
-        NULL, 
-        0);
+        NULL);
 }
 
 void WIFI_Init(void *arg)
