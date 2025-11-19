@@ -1,5 +1,5 @@
 idf_component_register(
-                         SRCS "main.c" 
+                         SRCS "main.c"
                               "LCD_Driver/ST7789.c"
                               "LVGL_Driver/LVGL_Driver.c"
                               "LVGL_UI/LVGL_Example.c"
@@ -7,12 +7,12 @@ idf_component_register(
                               "RGB/RGB.c"
                               "Wireless/Wireless.c"
 
-                         INCLUDE_DIRS 
-                              "./LCD_Driver" 
-                              "./LVGL_Driver" 
-                              "./LVGL_UI" 
+                         INCLUDE_DIRS
+                              "./LCD_Driver"
+                              "./LVGL_Driver"
+                              "./LVGL_UI"
                               "./SD_Card"
-                              "./RGB" 
+                              "./RGB"
                               "./Wireless"
                               "."
 
