@@ -1,5 +1,5 @@
     # This file was generated using idf.py save-defconfig. It can be edited manually.
-    # Espressif IoT Development Framework (ESP-IDF) 6.0.0 Project Minimal Configuration
+    # Espressif IoT Development Framework (ESP-IDF) 6.1.0 Project Minimal Configuration
     #
     # default:
 CONFIG_IDF_TARGET="esp32c6"
@@ -13,9 +13,7 @@ CONFIG_LV_MEM_SIZE_KILOBYTES=48
 CONFIG_LV_USE_PERF_MONITOR=y
 CONFIG_LV_FONT_MONTSERRAT_12=y
 CONFIG_LV_FONT_MONTSERRAT_18=y
+CONFIG_LV_BUILD_EXAMPLES=n
 CONFIG_LV_USE_DEMO_WIDGETS=y
 CONFIG_LV_DEMO_WIDGETS_SLIDESHOW=y
-CONFIG_LV_USE_DEMO_KEYPAD_AND_ENCODER=y
 CONFIG_LV_USE_DEMO_BENCHMARK=y
-CONFIG_LV_USE_DEMO_STRESS=y
-CONFIG_LV_USE_DEMO_MUSIC=y
