@@ -3,10 +3,12 @@
 
 #include "driver/gpio.h"
 
+#include "iot_button.h"
+#include "button_gpio.h"
 #include "led_strip.h"
 #include "led_strip_interface.h"
 
-#include "bsp/esp-bsp.h"
+#include "bsp/esp32_c6_lcd_1.47.h"
 
 static const char *TAG = "ESP32-C6-LCD-1.47";
 
@@ -52,3 +54,27 @@ esp_err_t bsp_led_init()
 	return ESP_OK;
 }
 
+static const button_gpio_config_t bsp_button_config[BSP_BUTTON_NUM] = { {
+	.gpio_num = BSP_BUTTON_MAIN_IO,
+	.active_level = 0,
+} };
+
+esp_err_t bsp_iot_button_create(button_handle_t btn_array[], int *btn_cnt, int btn_array_size)
+{
+	esp_err_t ret = ESP_OK;
+	const button_config_t btn_config = { 0 };
+
+	if ((btn_array_size < BSP_BUTTON_NUM) || (btn_array == NULL))
+		return ESP_ERR_INVALID_ARG;
+
+	if (btn_cnt)
+		*btn_cnt = 0;
+
+	for (int i = 0; i < BSP_BUTTON_NUM; i++) {
+		ret |= iot_button_new_gpio_device(&btn_config, &bsp_button_config[i], &btn_array[i]);
+		if (btn_cnt)
+			(*btn_cnt)++;
+	}
+
+	return ret;
+}

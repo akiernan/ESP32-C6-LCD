@@ -1,6 +1,10 @@
 dependencies:
   idf: ">=5.0.0"
 
+  button:
+    version: "^4"
+    public: true
+
   led_strip:
     version: "^3"
     public: true

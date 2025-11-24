@@ -12,6 +12,7 @@
 #pragma once
 
 #include "driver/gpio.h"
+#include "iot_button.h"
 
 /**************************************************************************************************
  *  BSP Board Name
@@ -71,10 +72,14 @@
  *  @brief Buttons BSP API
  *  @{
  */
-typedef enum {
-    BSP_BTN_PRESS = GPIO_NUM_9,
-} bsp_button_t;
+#define BSP_BUTTON_MAIN_IO (GPIO_NUM_9)
 /** @} */ // end of buttons
+
+/** \addtogroup g05_buttons
+ *  @brief BSP Buttons
+ *  @{
+ */
+typedef enum { BSP_BUTTON_MAIN, BSP_BUTTON_NUM } bsp_button_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -256,6 +261,35 @@ esp_err_t bsp_spiffs_unmount(void);
 
 /** @} */ // end of storage
 
+/** \addtogroup g05_buttons
+ *  @{
+ */
+
+/**************************************************************************************************
+ *
+ * Button
+ *
+ **************************************************************************************************/
+
+/**
+ * @brief Initialize all buttons
+ *
+ * Returned button handlers must be used with espressif/button component API
+ *
+ * @note For LCD panel button which is defined as BSP_BUTTON_MAIN, bsp_display_start should
+ *       be called before call this function.
+ *
+ * @param[out] btn_array      Output button array
+ * @param[out] btn_cnt        Number of button handlers saved to btn_array, can be NULL
+ * @param[in]  btn_array_size Size of output button array. Must be at least BSP_BUTTON_NUM
+ * @return
+ *     - ESP_OK               All buttons initialized
+ *     - ESP_ERR_INVALID_ARG  btn_array is too small or NULL
+ *     - ESP_FAIL             Underlaying iot_button_create failed
+ */
+esp_err_t bsp_iot_button_create(button_handle_t btn_array[], int *btn_cnt, int btn_array_size);
+
+/** @} */ // end of buttons
 #ifdef __cplusplus
 }
 #endif

@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
+#include "esp_err.h"
+#include "esp_log.h"
+
 #include "bsp/esp-bsp.h"
 
 #include "ST7789.h"
@@ -12,8 +15,19 @@
 #include "Wireless.h"
 #include "LVGL_Example.h"
 
+static const char *TAG = "main";
+
+/* Called on button press */
+static void btn_handler(void *button_handle, void *usr_data)
+{
+	int button_index = (int)usr_data;
+	ESP_LOGI(TAG, "Button %d pressed", button_index);
+}
+
 void app_main(void)
 {
+	button_handle_t btns[BSP_BUTTON_NUM] = { NULL };
+
 	Wireless_Init();
 	Flash_Searching();
 	bsp_led_init();
@@ -22,6 +36,11 @@ void app_main(void)
 	LCD_Init();
 	BK_Light(50);
 	LVGL_Init(); // returns the screen object
+
+	bsp_iot_button_create(btns, NULL, BSP_BUTTON_NUM);
+	/* Register a callback for button press */
+	for (int i = 0; i < BSP_BUTTON_NUM; i++)
+		iot_button_register_cb(btns[i], BUTTON_PRESS_DOWN, NULL, btn_handler, (void *)i);
 
 	/********************* Demo *********************/
 	Lvgl_Example1();
