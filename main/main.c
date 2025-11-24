@@ -7,6 +7,8 @@
 #include "esp_err.h"
 #include "esp_log.h"
 
+#include "nvs_flash.h"
+
 #include "bsp/esp-bsp.h"
 
 #include "ST7789.h"
@@ -24,9 +26,21 @@ static void btn_handler(void *button_handle, void *usr_data)
 	ESP_LOGI(TAG, "Button %d pressed", button_index);
 }
 
+static void nvs_init(void)
+{
+	esp_err_t err = nvs_flash_init();
+	if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+		ESP_ERROR_CHECK(nvs_flash_erase());
+		err = nvs_flash_init();
+	}
+	ESP_ERROR_CHECK(err);
+}
+
 void app_main(void)
 {
 	button_handle_t btns[BSP_BUTTON_NUM] = { NULL };
+
+	nvs_init();
 
 	Wireless_Init();
 	Flash_Searching();
