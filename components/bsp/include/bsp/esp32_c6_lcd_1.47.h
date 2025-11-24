@@ -72,14 +72,14 @@
  *  @brief Buttons BSP API
  *  @{
  */
-#define BSP_BUTTON_MAIN_IO (GPIO_NUM_9)
+#define BSP_BUTTON_BOOT_IO (GPIO_NUM_9)
 /** @} */ // end of buttons
 
 /** \addtogroup g05_buttons
  *  @brief BSP Buttons
  *  @{
  */
-typedef enum { BSP_BUTTON_MAIN, BSP_BUTTON_NUM } bsp_button_t;
+typedef enum { BSP_BUTTON_BOOT, BSP_BUTTON_NUM } bsp_button_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -276,7 +276,7 @@ esp_err_t bsp_spiffs_unmount(void);
  *
  * Returned button handlers must be used with espressif/button component API
  *
- * @note For LCD panel button which is defined as BSP_BUTTON_MAIN, bsp_display_start should
+ * @note For LCD panel button which is defined as BSP_BUTTON_BOOT, bsp_display_start should
  *       be called before call this function.
  *
  * @param[out] btn_array      Output button array

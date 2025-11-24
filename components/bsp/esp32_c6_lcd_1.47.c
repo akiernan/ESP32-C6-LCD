@@ -55,7 +55,7 @@ esp_err_t bsp_led_init()
 }
 
 static const button_gpio_config_t bsp_button_config[BSP_BUTTON_NUM] = { {
-	.gpio_num = BSP_BUTTON_MAIN_IO,
+	.gpio_num = BSP_BUTTON_BOOT_IO,
 	.active_level = 0,
 } };
 
