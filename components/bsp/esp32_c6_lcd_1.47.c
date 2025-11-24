@@ -44,15 +44,15 @@ typedef struct {
 } bsp_button_config_t;
 
 static const bsp_button_config_t bsp_button_config[BSP_BUTTON_NUM] = {
-    [BSP_BUTTON_BOOT] = {
-        .type = BSP_BUTTON_TYPE_GPIO,
-        .cfg.gpio = {
-            .gpio_num = BSP_BUTTON_BOOT_IO,
-            .active_level = 0,
-        }
-
-    },
+	[BSP_BUTTON_BOOT] = {
+		.type = BSP_BUTTON_TYPE_GPIO,
+		.cfg.gpio = {
+			.gpio_num = BSP_BUTTON_BOOT_IO,
+			.active_level = 0,
+		}
+	},
 };
+
 esp_err_t bsp_led_rgb_set(uint8_t r, uint8_t g, uint8_t b)
 {
 	esp_err_t ret;
@@ -67,8 +67,6 @@ esp_err_t bsp_led_rgb_set(uint8_t r, uint8_t g, uint8_t b)
 
 esp_err_t bsp_led_init()
 {
-	ESP_LOGI(TAG, "GPIO setting %d", bsp_strip_config.strip_gpio_num);
-
 	ESP_ERROR_CHECK(led_strip_new_rmt_device(&bsp_strip_config, &bsp_rmt_config, &led_strip));
 	ESP_ERROR_CHECK(bsp_led_rgb_set(0, 0, 0));
 
@@ -87,11 +85,10 @@ esp_err_t bsp_iot_button_create(button_handle_t btn_array[], int *btn_cnt, int b
 		*btn_cnt = 0;
 
 	for (int i = 0; i < BSP_BUTTON_NUM; i++) {
-		if (bsp_button_config[i].type == BSP_BUTTON_TYPE_GPIO) {
+		if (bsp_button_config[i].type == BSP_BUTTON_TYPE_GPIO)
 			ret |= iot_button_new_gpio_device(&btn_config, &bsp_button_config[i].cfg.gpio, &btn_array[i]);
-		} else {
+		else
 			ESP_LOGW(TAG, "Unsupported button type!");
-		}
 
 		if (btn_cnt)
 			(*btn_cnt)++;
