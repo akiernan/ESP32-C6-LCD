@@ -1,0 +1,6 @@
+dependencies:
+  idf: ">=5.0.0"
+
+  led_strip:
+    version: "^3"
+    public: true

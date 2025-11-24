@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
+#include "bsp/esp-bsp.h"
+
 #include "ST7789.h"
 #include "SD_SPI.h"
 #include "RGB.h"
@@ -14,7 +16,7 @@ void app_main(void)
 {
 	Wireless_Init();
 	Flash_Searching();
-	RGB_Init();
+	bsp_led_init();
 	RGB_Example();
 	SD_Init(); // SD must be initialized behind the LCD
 	LCD_Init();

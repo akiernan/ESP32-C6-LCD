@@ -1,6 +1,9 @@
+#include "freertos/FreeRTOS.h"
+
+#include "bsp/esp-bsp.h"
 #include "RGB.h"
 
-static uint8_t RGB_Data[192][3] = {
+static const uint8_t RGB_Data[192][3] = {
 	{ 64, 1, 0 },  { 63, 2, 0 },  { 62, 3, 0 },  { 61, 4, 0 },  { 60, 5, 0 },  { 59, 6, 0 },  { 58, 7, 0 },
 	{ 57, 8, 0 },  { 56, 9, 0 },  { 55, 10, 0 }, { 54, 11, 0 }, { 53, 12, 0 }, { 52, 13, 0 }, { 51, 14, 0 },
 	{ 50, 15, 0 }, { 49, 16, 0 }, { 48, 17, 0 }, { 47, 18, 0 }, { 46, 19, 0 }, { 45, 20, 0 }, { 44, 21, 0 },
@@ -35,37 +38,11 @@ static uint8_t RGB_Data[192][3] = {
 	{ 64, 0, 1 }
 };
 
-static led_strip_handle_t led_strip;
-
-void RGB_Init(void)
-{
-	/* LED strip initialization with the GPIO and pixels number*/
-	led_strip_config_t strip_config = {
-		.strip_gpio_num = BLINK_GPIO,
-		.max_leds = 1, // at least one LED on board
-	};
-	led_strip_rmt_config_t rmt_config = {
-		.resolution_hz = 10 * 1000 * 1000, // 10MHz
-		.flags.with_dma = false,
-	};
-	ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip));
-
-	/* Set all LED off to clear all pixels */
-	led_strip_clear(led_strip);
-}
-void Set_RGB(uint8_t red_val, uint8_t green_val, uint8_t blue_val)
-{
-	/* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-	led_strip_set_pixel(led_strip, 0, red_val, green_val, blue_val);
-	/* Refresh the strip to send data */
-	led_strip_refresh(led_strip);
-}
-
 void _RGB_Example(void *arg)
 {
 	static uint8_t i = 0;
 	while (1) {
-		Set_RGB(RGB_Data[i][0] * 3, RGB_Data[i][1] * 3, RGB_Data[i][2] * 3);
+		bsp_led_rgb_set(RGB_Data[i][0] * 3, RGB_Data[i][1] * 3, RGB_Data[i][2] * 3);
 		i++;
 		if (i >= 192)
 			i = 0;

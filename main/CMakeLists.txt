@@ -16,6 +16,7 @@ idf_component_register(
                               "./Wireless"
                               "."
 
+			 REQUIRES "bsp"
 			 PRIV_REQUIRES
 			      "bt"
 			      "esp_driver_ledc"

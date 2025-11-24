@@ -1,4 +1,15 @@
 dependencies:
+  bsp:
+    dependencies:
+    - name: idf
+      version: '>=5.0.0'
+    - name: espressif/led_strip
+      public: true
+      version: ^3
+    source:
+      path: /Volumes/src/ESP32-C6-LCD-1.47-Test/components/bsp
+      type: local
+    version: '*'
   espressif/led_strip:
     component_hash: 
       f0d1b7f93eb3ee57bcfd220656176b0b5616e1947f89ed44364555cf910c4840
@@ -23,9 +34,10 @@ dependencies:
       type: service
     version: 8.3.11
 direct_dependencies:
+- bsp
 - espressif/led_strip
 - idf
 - lvgl/lvgl
-manifest_hash: b784e808b68a47f2360ad32c1b0bd486e6fda7e02d159614d975ad0a043a3d84
+manifest_hash: b6ec9c1f9e0feb0f2e83eb10dedf80c1fb5ce88ac58e109b00a62ba1df67ba88
 target: esp32c6
 version: 2.0.0
