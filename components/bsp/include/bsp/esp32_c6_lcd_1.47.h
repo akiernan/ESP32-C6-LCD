@@ -11,8 +11,8 @@
 
 #pragma once
 
-#include "driver/gpio.h"
 #include "iot_button.h"
+#include "led_indicator.h"
 
 /**************************************************************************************************
  *  BSP Board Name
@@ -35,13 +35,13 @@
  */
 #define BSP_CAPS_DISPLAY 1
 #define BSP_CAPS_TOUCH 0
-#define BSP_CAPS_BUTTONS 0
+#define BSP_CAPS_BUTTONS 1
 #define BSP_CAPS_KNOB 0
 #define BSP_CAPS_AUDIO 0
 #define BSP_CAPS_AUDIO_SPEAKER 0
 #define BSP_CAPS_AUDIO_MIC 0
 #define BSP_CAPS_LED 1
-#define BSP_CAPS_SDCARD 0
+#define BSP_CAPS_SDCARD 1
 #define BSP_CAPS_IMU 0
 /** @} */ // end of capabilities
 
@@ -61,13 +61,6 @@
 #define BSP_LCD_BACKLIGHT (GPIO_NUM_22)
 /** @} */ // end of display
 
-/** @defgroup g06_led Leds
- *  @brief Leds BSP API
- *  @{
- */
-#define BSP_RGB_CTRL (GPIO_NUM_8)
-/** @} */ // end of leds
-
 /** @defgroup g05_buttons Buttons
  *  @brief Buttons BSP API
  *  @{
@@ -75,15 +68,39 @@
 #define BSP_BUTTON_BOOT_IO (GPIO_NUM_9)
 /** @} */ // end of buttons
 
+/** @defgroup g06_led Leds
+ *  @brief Leds BSP API
+ *  @{
+ */
+#define BSP_LED_RGB_GPIO (GPIO_NUM_8)
+#define BSP_LED_NUM (1)
+/** @} */ // end of leds
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \addtogroup g05_buttons
  *  @brief BSP Buttons
  *  @{
  */
 typedef enum { BSP_BUTTON_BOOT, BSP_BUTTON_NUM } bsp_button_t;
+/** @} */ // end of buttons
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/** \addtogroup g06_led
+ *  @{
+ */
+/* Default LED effects */
+typedef enum {
+	BSP_LED_ON,
+	BSP_LED_OFF,
+	BSP_LED_BLINK_FAST,
+	BSP_LED_BLINK_SLOW,
+	BSP_LED_BREATHE_FAST,
+	BSP_LED_BREATHE_SLOW,
+	BSP_LED_MAX,
+} bsp_led_effect_t;
+/** @} */ // end of leds
 
 #if 0
 /** \addtogroup g04_display
@@ -290,6 +307,33 @@ esp_err_t bsp_spiffs_unmount(void);
 esp_err_t bsp_iot_button_create(button_handle_t btn_array[], int *btn_cnt, int btn_array_size);
 
 /** @} */ // end of buttons
+
+/** \addtogroup g06_led
+ *  @{
+ */
+
+/**************************************************************************************************
+ *
+ * LEDs
+ *
+ **************************************************************************************************/
+
+/**
+ * @brief Initialize all LEDs
+ *
+ * @note led_cnt and led_array_size unused, only one config needed to control the leds
+ *
+ * @param[out] led_array      Output LED array
+ * @param[out] led_cnt        Number of LED handlers saved to led_array, can be NULL
+ * @param[in]  led_array_size Size of output LED array. Must be at least BSP_LED_NUM
+ * @return
+ *     - ESP_OK Success
+ *     - ESP_ERR_INVALID_ARG Parameter error
+ */
+esp_err_t bsp_led_indicator_create(led_indicator_handle_t led_array[], int *led_cnt, int led_array_size);
+
+/** @} */ // end of leds
+
 #ifdef __cplusplus
 }
 #endif

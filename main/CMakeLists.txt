@@ -4,7 +4,6 @@ idf_component_register(
                               "LVGL_Driver/LVGL_Driver.c"
                               "LVGL_UI/LVGL_Example.c"
                               "SD_Card/SD_SPI.c"
-                              "RGB/RGB.c"
                               "Wireless/Wireless.c"
 
                          INCLUDE_DIRS
@@ -12,7 +11,6 @@ idf_component_register(
                               "./LVGL_Driver"
                               "./LVGL_UI"
                               "./SD_Card"
-                              "./RGB"
                               "./Wireless"
                               "."
 

@@ -11,19 +11,35 @@
 
 #include "bsp/esp-bsp.h"
 
+#include "led_indicator.h"
+#include "led_indicator_blink_default.h"
+
 #include "ST7789.h"
 #include "SD_SPI.h"
-#include "RGB.h"
 #include "Wireless.h"
 #include "LVGL_Example.h"
 
 static const char *TAG = "main";
 
+static int example_sel_effect = BSP_LED_BREATHE_SLOW;
+static led_indicator_handle_t leds[BSP_LED_NUM];
+
 /* Called on button press */
 static void btn_handler(void *button_handle, void *usr_data)
 {
-	int button_index = (int)usr_data;
-	ESP_LOGI(TAG, "Button %d pressed", button_index);
+	int button_pressed = (int)usr_data;
+	ESP_LOGI(TAG, "Button pressed: %d. ", button_pressed);
+
+	led_indicator_stop(leds[0], example_sel_effect);
+
+	if (button_pressed == 0) {
+		example_sel_effect++;
+		if (example_sel_effect >= BSP_LED_MAX)
+			example_sel_effect = BSP_LED_ON;
+	}
+
+	ESP_LOGI(TAG, "Changed LED blink effect: %d.", example_sel_effect);
+	led_indicator_start(leds[0], example_sel_effect);
 }
 
 static void nvs_init(void)
@@ -38,23 +54,34 @@ static void nvs_init(void)
 
 void app_main(void)
 {
-	button_handle_t btns[BSP_BUTTON_NUM] = { NULL };
-
 	nvs_init();
 
 	Wireless_Init();
 	Flash_Searching();
-	bsp_led_init();
-	RGB_Example();
 	SD_Init(); // SD must be initialized behind the LCD
 	LCD_Init();
 	BK_Light(50);
 	LVGL_Init(); // returns the screen object
 
-	bsp_iot_button_create(btns, NULL, BSP_BUTTON_NUM);
-	/* Register a callback for button press */
-	for (int i = 0; i < BSP_BUTTON_NUM; i++)
-		iot_button_register_cb(btns[i], BUTTON_PRESS_DOWN, NULL, btn_handler, (void *)i);
+	/* Init buttons */
+	button_handle_t btns[BSP_BUTTON_NUM] = { NULL };
+
+	ESP_ERROR_CHECK(bsp_iot_button_create(btns, NULL, BSP_BUTTON_NUM));
+	for (int i = 0; i < BSP_BUTTON_NUM; i++) {
+		ESP_ERROR_CHECK(iot_button_register_cb(btns[i], BUTTON_PRESS_DOWN, NULL, btn_handler, (void *)i));
+	}
+
+	/* Init LEDs */
+	ESP_ERROR_CHECK(bsp_led_indicator_create(leds, NULL, BSP_LED_NUM));
+
+	/* Set LED color for first LED (only for addressable RGB LEDs) */
+	led_indicator_set_rgb(leds[0], SET_IRGB(0, 0x00, 0x64, 0x64));
+
+	/* Start effect for each LED
+	  (predefined: BSP_LED_ON, BSP_LED_OFF, BSP_LED_BLINK_FAST, BSP_LED_BLINK_SLOW, BSP_LED_BREATHE_FAST,
+	   BSP_LED_BREATHE_SLOW)
+	 */
+	led_indicator_start(leds[0], BSP_LED_BREATHE_SLOW);
 
 	/********************* Demo *********************/
 	Lvgl_Example1();

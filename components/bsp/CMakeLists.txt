@@ -7,7 +7,7 @@ else()
 endif()
 
 idf_component_register(
-    SRCS "esp32_c6_lcd_1.47.c"
+    SRCS "esp32_c6_lcd_1.47.c" "led_blink_defaults.c"
     INCLUDE_DIRS "include"
     REQUIRES ${REQ}
     PRIV_REQUIRES ${PRIV_REQ}
